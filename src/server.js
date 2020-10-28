@@ -1,5 +1,5 @@
 import express from 'express'; 
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 
 const app = express();
 const port = 4000;
@@ -31,15 +31,28 @@ const fetchData = async ({dbName, collectionName, query}) => {
 	}
 }
 
-app.get('/', (req, res) => {
-	res.send("somedata");
-});
+//const updateData = async ({dbName, collectionName, query}) => {
+//  try {
+//    await connectDB();
+//    const db = mongoClient.db(dbName);
+//    const collection= db.collection(collectionName);
+//    await collection.findandUpdate()
+//  }
+//}
 
-app.get('/api/', async (req, res) => {
+app.get('/api/articles-list', async (_req, res) => {
   res.send(await fetchData({
 		dbName: "test",
   	collectionName: "articles",
 		query: {}
+	}));
+});
+
+app.get('/api/article/:id', async (req, res) => {
+	res.send(await fetchData({
+		dbName: "test",
+		collectionName: "articles",
+		query: {_id: ObjectId(req.params.id)}
 	}));
 });
 
