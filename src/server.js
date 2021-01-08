@@ -1,4 +1,5 @@
 import express from 'express'; 
+
 import { MongoClient, ObjectId } from 'mongodb';
 
 const app = express();
@@ -31,18 +32,32 @@ const fetchData = async ({dbName, collectionName, query}) => {
 	}
 }
 
-//const updateData = async ({dbName, collectionName, query}) => {
-//  try {
-//    await connectDB();
-//    const db = mongoClient.db(dbName);
-//    const collection= db.collection(collectionName);
-//    await collection.findandUpdate()
-//  }
-//}
+const updateData = async ({dbName, collectionName, query, updateQuery}) => {
+	try {
+		await connectDB();
+		const db = mongoClient.db(dbName);
+		const collection= db.collection(collectionName);
+		await collection.updateOne(query, updateQuery)
+	} catch(err) {
+		console.log("failed update the data");
+		console.error(err);
+	} finally {
+	}
+}
+
+app.get('/', (_req, res) => {
+  res.contentType = "html";
+  res.send(
+    `
+    <a href='http://localhost:${port}/api/articles-list'
+    >http://localhost:${port}/api/articles-list</a>
+    `
+  )
+});
 
 app.get('/api/articles-list', async (_req, res) => {
   res.send(await fetchData({
-		dbName: "test",
+		dbName: "mock-blog",
   	collectionName: "articles",
 		query: {}
 	}));
@@ -50,10 +65,21 @@ app.get('/api/articles-list', async (_req, res) => {
 
 app.get('/api/article/:id', async (req, res) => {
 	res.send(await fetchData({
-		dbName: "test",
+		dbName: "mock-blog",
 		collectionName: "articles",
 		query: {_id: ObjectId(req.params.id)}
 	}));
+
+	updateData({
+		dbName: "mock-blog",
+		collectionName: "articles",
+		query: { _id: ObjectId(req.params.id) },
+		updateQuery: {
+			$inc: {
+				views: 1
+			}
+		}
+	})
 });
 
 

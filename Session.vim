@@ -7,7 +7,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +39 src/server.js
+badd +7 src/server.js
 argglobal
 %argdel
 $argadd ./
@@ -29,31 +29,29 @@ setlocal fdl=9
 setlocal fml=1
 setlocal fdn=5
 setlocal fen
-13
+14
 normal! zo
-21
+22
 normal! zo
-43
+35
 normal! zo
-43
+48
 normal! zo
-44
+48
 normal! zo
-44
+58
 normal! zo
-51
+58
 normal! zo
-51
+59
 normal! zo
-52
+59
 normal! zo
-52
-normal! zo
-let s:l = 1 - ((0 * winheight(0) + 20) / 40)
+let s:l = 9 - ((4 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+9
 normal! 0
 tabnext 1
 if exists('s:wipebuf') && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
